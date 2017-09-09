@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+#这个是一个习惯，因为我们如果写了这一条的话我们下面的脚本出现错误的话，我们后面的脚本就在执行了。就像python中的异常捕捉。
+
+
+
+#
+# When Startup Container script
+#
+
+if [[ -e /scripts/firstrun ]]; then
+	# config mariadb
+	/scripts/firstrun_maria
+    	rm /scripts/firstrun
+else
+	# Cleanup previous mariadb sockets
+	if [[ -e ${DATA_DIR}/mysql.sock ]]; then
+		rm -f ${DATA_DIR}/mysql.sock
+	fi
+fi
+
+exec /usr/bin/mysqld_safe
+
